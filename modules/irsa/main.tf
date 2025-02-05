@@ -88,12 +88,11 @@ resource "aws_iam_role_policy_attachment" "irsa" {
   role       = aws_iam_role.irsa[0].name
 }
 
-resource "aws_pod_identity_account" "irsa" {
+resource "aws_pod_identity_association" "irsa" {
   count = var.irsa_iam_policies != null ? 1 : 0
-  metadata {
-    name = var.kubernetes_service_account
-  }
-  spec {
-    namespace = try(kubernetes_namespace_v1.irsa[0].metadata[0].name, var.kubernetes_namespace)
-  }
+  
+  cluster_name = var.eks_cluster_id
+  namespace = try(kubernetes_namespace_v1.irsa[0].metadata[0].name, var.kubernetes_namespace)
+  service_account =  var.kubernetes_service_account
+  role_arn = aws_iam_role.irsa[0].arn
 }
