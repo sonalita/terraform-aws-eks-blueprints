@@ -88,7 +88,7 @@ resource "aws_iam_role_policy_attachment" "irsa" {
   role       = aws_iam_role.irsa[0].name
 }
 
-resource "aws_pod_identity_association" "irsa" {
+resource "aws_eks_pod_identity_association" "irsa" {
   count = var.irsa_iam_policies != null ? 1 : 0
   
   cluster_name = var.eks_cluster_id
